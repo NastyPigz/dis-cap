@@ -1,9 +1,12 @@
-import aiohttp, asyncio, json
+import aiohttp, asyncio, json, typing
 from .cache import *
 from .parse import *
 from .exceptions import *
 
 class Client:
+  """
+  The intents is maximum at default so too bad if you don't have presences or guild_members intents LMFAOOO go use a calculator noob
+  """
   def __init__(self, *, intents:int=32767):
     self.payload = {
       'op': 2,
@@ -22,11 +25,17 @@ class Client:
     self.client_tasks = {
       "on_message": [],
       "on_socket": [],
-      "socket_json": False
+      "socket_json": False,
+      "message_bool": False
     }
+    self.session = aiohttp.ClientSession()
 
-  def message(self, coro):
-    self.client_tasks["on_message"]=[coro]
+  def message(self, *, pass_message:bool=False):
+    if pass_message:
+      self.client_tasks["message_bool"]=pass_message
+    def message(self, coro):
+      self.client_tasks["on_message"]=[coro]
+    return message
 
   def socket_res(self, coro):
     self.client_tasks["on_socket"]=[coro]
@@ -72,7 +81,7 @@ class Client:
     loop.run_forever()
 
   async def main_task(self, token:str, *, mobile:bool=False, debug:bool=False):
-    session = aiohttp.ClientSession()
+    session = self.session
     ws = await session.ws_connect('wss://gateway.discord.gg/?v=9&encording=json')
     msg = await ws.receive()
     data = msg.json()

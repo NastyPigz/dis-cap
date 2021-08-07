@@ -15,7 +15,10 @@ class Parsing:
       if not len(self.tasks["on_message"]) == 0:
         async def task():
           for task in self.tasks["on_message"]:
-           await task()
+            if self.tasks["message_bool"]:
+              await task("no message haha noob")
+            else:
+              await task()
         self.loop.create_task(task())
       object_ = self.object
     else:
