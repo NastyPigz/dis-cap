@@ -35,7 +35,7 @@ async def socket_event(data):
 
 #how to make a socket_response event and receive JSON data instead of stupid objects 
 
-client.run("ODI0NjM3OTk2NjMyMTEzMTUy.YFyR-w._wmypOtawDBdHgOmT9Q7apVpxq8", mobile=True)
+client.run("token", mobile=True)
 
 #totally was not inspired by dpy
 #debug kwarg is required to be True if you want to use socket_response event
