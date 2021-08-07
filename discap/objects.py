@@ -16,7 +16,7 @@ class Message:
         "content": content
       }
     )
-    return response
+    return Message(self.bot, await response.json())
 
 class MessageAuthor:
   def __init__(self, payload):

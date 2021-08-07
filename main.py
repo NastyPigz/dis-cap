@@ -15,8 +15,8 @@ async def message_event(msg):
 #how to make a message event
 
 @client.socket_res
-async def socket_event():
-  pass
+async def socket_event(data):
+  print(data)
 
 #how to make a socket event
 
@@ -29,7 +29,7 @@ async def message_event_replacement(msg):
 
 #how to add another message event
 
-@client.event(name="socket_response", json=True)
+@client.event(name="socket_response", json=True, add=True)
 async def socket_event(data):
   pass
 
