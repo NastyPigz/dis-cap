@@ -2,9 +2,9 @@ Example trash because I don't know how to use markdowns xd
 
 BEFORE USING, VIEWING, PR-ING THIS RESPO PLEASE READ LICENSE. If found BREAKING license, you will be charged $300,000,000 USD as your first fine and will be squared by 3 each infraction.
 ```py
-import dis_cap, os
+import discap, os
 
-client = discord.Client()
+client = discap.Client()
 
 @client.ready
 async def ready_event():
@@ -12,8 +12,9 @@ async def ready_event():
 
 #how to make a ready event
 
-@client.message
-async def message_event():
+@client.message(pass_message=True)
+async def message_event(msg):
+  print(msg)
   print("MESSAGE CREATED")
 
 #how to make a message event
