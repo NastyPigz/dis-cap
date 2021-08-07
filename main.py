@@ -22,7 +22,7 @@ async def socket_event():
 
 @client.event(name="message_create", add=True)
 async def message_event_replacement(msg):
-  if int(msg.author.id) == 824637996632113152:
+  if msg.author.id == 824637996632113152:
     return
   if msg.content.lower() == "!help":
     await msg.send("Help is here!")
