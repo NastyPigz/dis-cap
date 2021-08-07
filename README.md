@@ -1,4 +1,6 @@
-import discord, os
+Example trash because I don't know how to use markdowns xd
+
+import dis_cap, os
 
 client = discord.Client()
 
