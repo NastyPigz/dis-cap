@@ -26,8 +26,17 @@ class Cache:
     payload = payload["d"]
     IDs = [i["id"] for i in self.bot_data["guilds"]]
     if payload["id"] in IDs:
-      # print(payload)
-      pass
+      print(payload)
+      index = self.bot_data["guilds"].index({"id":payload["id"]})
+      self.bot_data["guilds"][index]={
+        "original": payload,
+        "id": payload["id"],
+        "name": payload["name"],
+        "description": payload["description"],
+        "mfa_level": payload["mfa_level"],
+        "nsfw": payload["nsfw"],
+        "owner": payload["owner_id"]
+      }
     else:
       self.bot_data["guilds"].append({
         "id": payload["id"]

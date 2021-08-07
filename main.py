@@ -1,7 +1,3 @@
-Example trash because I don't know how to use markdowns xd
-
-BEFORE USING, VIEWING, PR-ING THIS RESPO PLEASE READ LICENSE. If found BREAKING license, you will be charged $300,000,000 USD as your first fine and will be squared by 3 each infraction.
-```py
 import discap, os
 
 client = discap.Client()
@@ -38,8 +34,7 @@ async def socket_event(data):
 
 #how to make a socket_response event and receive JSON data instead of stupid objects 
 
-client.run(os.getenv("TOKEN"), mobile=True, debug=True)
+client.run(os.getenv("TOKEN"), mobile=True)
 
 #totally was not inspired by dpy
 #debug kwarg is required to be True if you want to use socket_response event
-```

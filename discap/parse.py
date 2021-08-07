@@ -1,4 +1,5 @@
 from .cache import *
+from .objects import *
 
 class Parsing:
   def __init__(self, payload: dict, obj: Cache, tasks, loop):

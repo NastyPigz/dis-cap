@@ -33,7 +33,7 @@ class Client:
   def message(self, *, pass_message:bool=False):
     if pass_message:
       self.client_tasks["message_bool"]=pass_message
-    def message(self, coro):
+    def message(coro):
       self.client_tasks["on_message"]=[coro]
     return message
 
@@ -102,15 +102,16 @@ class Client:
       await self.ready_task()
     while True:
       msg = await ws.receive()
-      if len(self.client_tasks["on_socket"]) != 0:
-        for task in self.client_tasks["on_socket"]:
-          if not self.client_tasks["socket_json"]:
-            await task(msg)
-          else:
-            try:
-              await task(msg.json())
-            except:
-              pass
+      if debug:
+        if len(self.client_tasks["on_socket"]) != 0:
+          for task in self.client_tasks["on_socket"]:
+            if not self.client_tasks["socket_json"]:
+              await task(msg)
+            else:
+              try:
+                await task(msg.json())
+              except:
+                pass
       try:
         self.DATA = Parsing(msg.json(), self.DATA, self.client_tasks, self.loop).parse()
       except Exception as e:
