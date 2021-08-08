@@ -1,7 +1,8 @@
 from .objects import *
 
 class ServerGuild:
-    def __init__(self, payload:dict):
+    def __init__(self, bot, payload:dict):
+        self.bot = bot
         self.original= payload
         self.id = payload["id"]
         self.name = payload["name"]
@@ -23,9 +24,14 @@ class ServerGuild:
         self._emojis_data = payload["emojis"] #emojis
         self.icon = payload["icon"]
     
+    def add_channel(self, payload):
+        self._channels_data.append(payload)
+        return True
+
     @property
     def channels(self):
         list_channels = []
         for _channel in self._channels_data:
-            list_channels.append(DiscordChannel(_channel))
+            list_channels.append(DiscordChannel(self.bot, _channel))
+        return list_channels
         

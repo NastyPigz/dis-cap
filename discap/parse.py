@@ -23,6 +23,8 @@ class Parsing:
               await task()
         self.loop.create_task(task())
       object_ = self.object
+    elif received_type == "CHANNEL_CREATE":
+      object_ = self.object.add_channel(self.payload)
     else:
       object_ = self.object
     return object_

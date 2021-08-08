@@ -33,6 +33,19 @@ class Client:
   def kill(self):
     exit(0)
 
+  def get_guild(self, id:int):
+    for guild in self.DATA.bot_data["guilds"]:
+      if int(guild.id) == int(id):
+        return guild
+    return None
+
+  def get_channel(self, id:int):
+    for guild in self.DATA.bot_data["guilds"]:
+      for channel in guild.channels:
+        if int(channel.id) == int(id):
+          return channel
+    return None
+
   async def request(self, route: Route, *, json:dict):
     headers = {
       "Authorization": "Bot %s" % self.token
@@ -137,7 +150,7 @@ class Client:
         if data.extra == "Authentication failed.":
           await self.session.close()
           raise InvalidToken("Not a Valid Token")
-    self.DATA = Cache(ready_msg.json()).parse_ready()
+    self.DATA = Cache(self, ready_msg.json()).parse_ready()
     if not self.ready_task is None:
       await self.ready_task()
     presence_payload = {
@@ -168,7 +181,8 @@ class Client:
       try:
         self.DATA = Parsing(msg.json(), self.DATA, self.client_tasks, self.loop, self).parse()
       except Exception as e:
-        print(e)
+        print(e, "In Client, Parsing")
+        raise e
         continue
   
   async def send_heart_beat(self, interval, session, *, heartbeat:bool=False):

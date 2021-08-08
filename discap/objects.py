@@ -2,18 +2,46 @@ from .routing import *
 
 class Message:
   def __init__(self, bot, payload):
-    self.channel = None #insert get_channel shit here
+    self.id = payload["id"]
+    self.channel = bot.get_channel(int(payload["channel_id"]))
+    try:
+      guild_id = int(payload["guild_id"])
+      self.guild = bot.get_guild(guild_id)
+    except:
+      self.guild = None
     self.bot = bot
     self.payload = payload
     self.content = payload["content"]
     self.author = MessageAuthor(payload)
 
-  async def send(self, content:str):
-    channel_id = self.payload["channel_id"]
+  async def reply(self, content:str, *, tts:bool=False, embeds:list=[], retry:bool=True, allowed_mentions:dict={}, components:dict={}):
+    channel_id = self.channel.id
     response = await self.bot.request(
       Route(method="POST", url=f"/channels/{channel_id}/messages"),
       json={
-        "content": content
+        "content": str(content),
+        "tts": tts,
+        "embeds": [i.to_dict() for i in embeds],
+        "message_reference": {
+          "message_id": self.id,
+          "guild_id": self.guild.id,
+          "fail_if_not_exists": False if retry else True
+        },
+        "allowed_mentions": allowed_mentions,
+        "components": components
+      }
+    )
+    return Message(self.bot, await response.json())
+
+  async def send(self, content:str, *, embeds:list=[], reference:dict={}, allowed_mentions:dict={}):
+    channel_id = self.channel.id
+    response = await self.bot.request(
+      Route(method="POST", url=f"/channels/{channel_id}/messages"),
+      json={
+        "content": str(content),
+        "embeds": [i.to_dict() for i in embeds],
+        "message_reference": reference,
+        "allowed_mentions": allowed_mentions
       }
     )
     return Message(self.bot, await response.json())
@@ -41,12 +69,14 @@ class Member(User):
     self.joined_at = payload["joined_at"]
     self.nickname = None if not payload["nick"] else payload["nick"]
 
-class DiscordChannel:
-  def __init__(self, payload):
+class DiscordChannel(Message):
+  def __init__(self, bot, payload):
+    self.bot = bot
     self.payload = payload
     self._type = payload["type"]
     self.id = int(payload["id"])
     self.name = payload["name"]
+    self.channel = self
     if self._type == 4:
       self.type=CategoryChannel
     elif self._type == 0:

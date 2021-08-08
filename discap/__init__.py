@@ -4,3 +4,6 @@ from .routing import *
 from .exceptions import *
 from .objects import *
 from .parse import *
+from .embed import *
+from .allowed_mentions import *
+from .reference import *
