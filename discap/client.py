@@ -72,6 +72,28 @@ class Client:
     except:
       raise Exception(f"So the response wasn't json format, it was {response}")
 
+  def wait_for(self, name:str, *, check=None):
+    if check is None:
+      def _check(*args, **kwargs):
+        return True
+      check=_check
+    if name == "message_create":
+      task = self.loop.create_future()
+      async def end_future(*args, **kwargs):
+        if not check(*args, **kwargs):
+          return
+        task.set_result(*args, **kwargs)
+        self.remove_event(name, end_future)
+      self.schedule_event(name=name, add=True)(end_future)
+      return asyncio.wait([task])
+
+  def remove_event(self, name:str, task):
+    if name == "message_create":
+      item = self.client_tasks["on_message"].pop(self.client_tasks["on_message"].index(task))
+    elif name == "socket_response":
+      item = self.client_tasks["on_socket"].pop(self.client_tasks["on_socket"].index(task))
+    return item
+
   def message(self, *, pass_message:bool=False):
     if pass_message:
       self.client_tasks["message_bool"]=pass_message
@@ -93,6 +115,25 @@ class Client:
       self.client_tasks[actual_name].pop(order)
     except:
       raise EventIndexFailure(f"{order} out of range of registered {name} events")
+
+  def schedule_event(self, *, name:str, add:bool=False, json:bool=False):
+    if name == "message_create":
+      if add:
+        def add_message_task(coro):
+          self.client_tasks["on_message"].insert(0, coro)
+      else:
+        def add_message_task(coro):
+          self.client_tasks["on_message"] = [coro]
+      return add_message_task
+    elif name == "socket_response":
+      self.client_tasks["socket_json"]=json
+      if add:
+        def add_message_task(coro):
+          self.client_tasks["on_socket"].insert(0, coro)
+      else:
+        def add_message_task(coro):
+          self.client_tasks["on_socket"] = [coro]
+      return add_message_task
 
   def event(self, *, name:str, add:bool=False, json:bool=False):
     if name == "message_create":

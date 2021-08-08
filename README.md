@@ -2,7 +2,7 @@ Example trash because I don't know how to use markdowns xd
 
 BEFORE USING, VIEWING, PR-ING THIS RESPO PLEASE READ LICENSE. If found BREAKING license, you will be charged $300,000,000 USD as your first fine and will be squared by 3 each infraction.
 ```py
-import discap, os
+import discap, os, datetime
 
 client = discap.Client()
 
@@ -56,14 +56,22 @@ prefix = "!"
 async def commands_handler(msg):
   if msg.content.lower().startswith(prefix): # or if msg.content.lower() in prefixes if you have a list of prefix
     args = msg.content[len(prefix):].split(" ") #this is subjected to change if you are using a list of prefixes
-    print(args)
     command = args.pop(0).lower()
     if command == "ping": #this will be easier with python 3.10's match and case.
       await msg.send("Pong!")
+    elif command == "wait":
+      await discap.utils.wait_until(datetime.datetime.utcnow()+datetime.timedelta(seconds=3))
+      #waiting using wait_until from utils.
+      await msg.send("Done")
+    elif command == "message_":
+      def check(m):
+        return m.author.id == msg.author.id
+      await client.wait_for("message_create", check=check)
+      await msg.send("LET'S GOO")
 
 #example of a command handler.
 
-TOKEN="" #recommended: os.environ / os.getenv , if you're using git, add a .gitignore file
+TOKEN="stuff here" #recommended: os.environ / os.getenv , if you're using git, add a .gitignore file
 
 client.run(TOKEN, mobile=True)
 
