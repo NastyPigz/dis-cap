@@ -67,6 +67,6 @@ TOKEN="" #recommended: os.environ / os.getenv , if you're using git, add a .giti
 
 client.run(TOKEN, mobile=True)
 
-#totally was not inspired by dpy
 #debug kwarg is required to be True if you want to use socket_response event
+#client.run(debug=True)
 ```
