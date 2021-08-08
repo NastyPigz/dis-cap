@@ -1,3 +1,3 @@
 _pycache_
-/main
-/__main__
+!main.py
+!__main__.py
