@@ -59,7 +59,7 @@ async def commands_handler(msg):
 
 #example of a command handler.
 
-client.run("ODI0NjM3OTk2NjMyMTEzMTUy.YFyR-w.ekzK7p6ynu81D18xVvLCEIkvcKE", mobile=True)
+client.run("ODI0NjM3OTk2NjMyMTEzMTUy.YFyR-w.H_I-65EswO836IcMo-Dilq9k8FA", mobile=True)
 
 #totally was not inspired by dpy
 #debug kwarg is required to be True if you want to use socket_response event
